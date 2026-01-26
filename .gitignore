@@ -1,0 +1,65 @@
+# dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# virtual environment
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# environment variables
+.env
+.env.local
+.env.production
+*.env
+
+# build outputs
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# database
+*.db
+*.sqlite
+*.sqlite3
+
+# logs
+*.log
+logs/
+
+# testing
+.coverage
+htmlcov/
+.pytest_cache/
+.cache/
+
+# OS
+Thumbs.db
+
+# Frontend specific
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/coverage/
+
+# Backend specific
+backend/alembic/versions/*.py
+!backend/alembic/versions/__init__.py
+backend/uploads/*
+!backend/uploads/.gitkeep
