@@ -23,9 +23,6 @@ email-validator==2.2.0
 # AI & ML
 openai==1.58.1
 
-# CORS & Middleware
-python-cors==1.0.0
-
 # Environment
 python-dotenv==1.0.1
 
