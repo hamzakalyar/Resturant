@@ -8,7 +8,7 @@ from app.core.config import settings
 from app.database import engine, Base
 
 # Import all models to ensure they're registered with SQLAlchemy
-from app.models import menu, reservation, order, review, contact
+from app.models import menu, reservation, order, review, contact, user
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -55,7 +55,9 @@ from app.api import order as order_router
 from app.api import review as review_router
 from app.api import contact as contact_router
 from app.api import ai as ai_router
+from app.api import auth as auth_router
 
+app.include_router(auth_router.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(menu_router.router, prefix="/api/menu", tags=["Menu"])
 app.include_router(reservation_router.router, prefix="/api/reservations", tags=["Reservations"])
 app.include_router(order_router.router, prefix="/api/orders", tags=["Orders"])

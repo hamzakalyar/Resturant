@@ -5,11 +5,14 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBars, FaTimes, FaUtensils } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUtensils, FaUser, FaSignOutAlt, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
+import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [showUserMenu, setShowUserMenu] = useState(false);
+    const { user, isAuthenticated, logout } = useAuth();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -17,6 +20,12 @@ const Navbar = () => {
 
     const closeMenu = () => {
         setIsOpen(false);
+        setShowUserMenu(false);
+    };
+
+    const handleLogout = () => {
+        logout();
+        closeMenu();
     };
 
     return (
@@ -56,7 +65,70 @@ const Navbar = () => {
                                 Contact
                             </Link>
                         </li>
+
+                        {/* Auth Links - Mobile */}
+                        <li className="navbar__item navbar__item--mobile">
+                            {isAuthenticated ? (
+                                <>
+                                    <span className="navbar__user-mobile">
+                                        Welcome, {user?.full_name}
+                                    </span>
+                                    <button onClick={handleLogout} className="navbar__link navbar__logout-mobile">
+                                        <FaSignOutAlt /> Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/login" className="navbar__link" onClick={closeMenu}>
+                                        <FaSignInAlt /> Login
+                                    </Link>
+                                    <Link to="/register" className="navbar__link" onClick={closeMenu}>
+                                        <FaUserPlus /> Register
+                                    </Link>
+                                </>
+                            )}
+                        </li>
                     </ul>
+
+                    {/* Auth Section - Desktop */}
+                    <div className="navbar__auth">
+                        {isAuthenticated ? (
+                            <div className="navbar__user-menu">
+                                <button
+                                    className="navbar__user-button"
+                                    onClick={() => setShowUserMenu(!showUserMenu)}
+                                >
+                                    <FaUser />
+                                    <span>{user?.full_name}</span>
+                                </button>
+                                {showUserMenu && (
+                                    <div className="navbar__dropdown">
+                                        <Link to="/profile" className="navbar__dropdown-item" onClick={closeMenu}>
+                                            My Profile
+                                        </Link>
+                                        <Link to="/orders" className="navbar__dropdown-item" onClick={closeMenu}>
+                                            My Orders
+                                        </Link>
+                                        <Link to="/reservations/my" className="navbar__dropdown-item" onClick={closeMenu}>
+                                            My Reservations
+                                        </Link>
+                                        <button onClick={handleLogout} className="navbar__dropdown-item">
+                                            <FaSignOutAlt /> Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="navbar__auth-buttons">
+                                <Link to="/login" className="navbar__auth-link">
+                                    Login
+                                </Link>
+                                <Link to="/register" className="navbar__btn-register">
+                                    Register
+                                </Link>
+                            </div>
+                        )}
+                    </div>
 
                     {/* Mobile Toggle */}
                     <button
