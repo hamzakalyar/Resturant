@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch, FaShoppingCart, FaTimes, FaFilter, FaLeaf, FaCarrot, FaBreadSlice, FaCheese } from 'react-icons/fa';
 import Button from '../components/common/Button';
+import Footer from '../components/common/Footer';
 import menuService from '../services/menuService';
 import './Menu.css';
 
@@ -268,6 +269,10 @@ const Menu = () => {
                                     <img
                                         src={item.image_url || '/signature-dishes.png'}
                                         alt={item.name}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = '/signature-dishes.png';
+                                        }}
                                     />
                                     {item.dietary_tags && item.dietary_tags.length > 0 && (
                                         <div className="menu-card__badges">
@@ -323,6 +328,10 @@ const Menu = () => {
                                 <img
                                     src={selectedItem.image_url || '/signature-dishes.png'}
                                     alt={selectedItem.name}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = '/signature-dishes.png';
+                                    }}
                                 />
                             </div>
                             <div className="modal-details">
@@ -380,6 +389,9 @@ const Menu = () => {
                     </div>
                 </div>
             )}
+
+            {/* Footer */}
+            <Footer />
         </div>
     );
 };
