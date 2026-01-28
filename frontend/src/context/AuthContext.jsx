@@ -33,9 +33,30 @@ export const AuthProvider = ({ children }) => {
             setUser(userData);
             return { success: true, user: userData };
         } catch (error) {
+            console.error('Login error:', error);
+
+            // Extract detailed error message
+            let errorMessage = 'Login failed';
+
+            if (error.response) {
+                if (error.response.data?.detail) {
+                    errorMessage = error.response.data.detail;
+                } else if (error.response.data?.message) {
+                    errorMessage = error.response.data.message;
+                } else if (typeof error.response.data === 'string') {
+                    errorMessage = error.response.data;
+                } else {
+                    errorMessage = `Login failed: ${error.response.status} ${error.response.statusText}`;
+                }
+            } else if (error.request) {
+                errorMessage = 'Cannot connect to server. Please check if the backend is running at http://localhost:8000';
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+
             return {
                 success: false,
-                error: error.response?.data?.detail || 'Login failed'
+                error: errorMessage
             };
         }
     };
@@ -46,9 +67,33 @@ export const AuthProvider = ({ children }) => {
             // Don't auto-login, redirect to login page
             return { success: true, user: newUser };
         } catch (error) {
+            console.error('Registration error:', error);
+
+            // Extract detailed error message
+            let errorMessage = 'Registration failed';
+
+            if (error.response) {
+                // Server responded with error
+                if (error.response.data?.detail) {
+                    errorMessage = error.response.data.detail;
+                } else if (error.response.data?.message) {
+                    errorMessage = error.response.data.message;
+                } else if (typeof error.response.data === 'string') {
+                    errorMessage = error.response.data;
+                } else {
+                    errorMessage = `Registration failed: ${error.response.status} ${error.response.statusText}`;
+                }
+            } else if (error.request) {
+                // Request made but no response
+                errorMessage = 'Cannot connect to server. Please check if the backend is running at http://localhost:8000';
+            } else if (error.message) {
+                // Error in request setup
+                errorMessage = error.message;
+            }
+
             return {
                 success: false,
-                error: error.response?.data?.detail || 'Registration failed'
+                error: errorMessage
             };
         }
     };
