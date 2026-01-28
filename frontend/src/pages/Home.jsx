@@ -7,6 +7,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaUtensils, FaClock, FaStar, FaMapMarkerAlt, FaQuoteLeft, FaHeart, FaAward } from 'react-icons/fa';
 import Button from '../components/common/Button';
+import Footer from '../components/common/Footer';
 import './Home.css';
 
 const Home = () => {
@@ -276,6 +277,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Footer */}
+            <Footer />
         </div>
     );
 };
