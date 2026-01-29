@@ -24,29 +24,59 @@ router = APIRouter()
 @router.post("/register", response_model=User, status_code=status.HTTP_201_CREATED)
 async def register(user: UserCreate, db: Session = Depends(get_db)):
     """Register a new user."""
-    # Check if user already exists
-    db_user = get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+    try:
+        # Log registration attempt
+        print(f"[AUTH] Registration attempt for email: {user.email}")
+        
+        # Check if user already exists
+        db_user = get_user_by_email(db, email=user.email)
+        if db_user:
+            print(f"[AUTH] Registration failed - email already exists: {user.email}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
+        
+        # Validate password
+        if len(user.password) < 6:
+            print(f"[AUTH] Registration failed - password too short for: {user.email}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Password must be at least 6 characters long"
+            )
+        
+        # Create new user
+        print(f"[AUTH] Creating user account for: {user.email}")
+        hashed_password = get_password_hash(user.password)
+        db_user = UserModel(
+            email=user.email,
+            full_name=user.full_name,
+            phone=user.phone if user.phone else None,
+            password_hash=hashed_password,
+            is_active=True,
+            is_admin=False
         )
-    
-    # Create new user
-    hashed_password = get_password_hash(user.password)
-    db_user = UserModel(
-        email=user.email,
-        full_name=user.full_name,
-        phone=user.phone,
-        password_hash=hashed_password,
-        is_active=True,
-        is_admin=False
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    
-    return db_user
+        
+        # Add to database
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        
+        print(f"[AUTH] User registered successfully: {user.email} (ID: {db_user.id})")
+        return db_user
+        
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
+        
+    except Exception as e:
+        # Log unexpected errors
+        print(f"[AUTH] [ERROR] Registration error for {user.email}: {type(e).__name__}: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Registration failed: {str(e)}"
+        )
 
 
 @router.post("/login", response_model=Token)

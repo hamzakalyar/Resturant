@@ -32,6 +32,34 @@ app.add_middleware(
 )
 
 
+@app.on_event("startup")
+async def startup_event():
+    """Run on application startup."""
+    print("\n" + "=" * 60)
+    print("Restaurant API Starting Up")
+    print("=" * 60)
+    print(f"App Name: {settings.APP_NAME}")
+    print(f"Debug Mode: {settings.DEBUG}")
+    print(f"Database: {settings.DATABASE_URL}")
+    print(f"CORS Origins: {', '.join(settings.cors_origins)}")
+    print("=" * 60)
+    
+    # Verify database connection
+    try:
+        from app.models.user import User as UserModel
+        from sqlalchemy import select
+        db = next(get_db())
+        # Try a simple query
+        result = db.execute(select(UserModel).limit(1))
+        user_count = db.query(UserModel).count()
+        db.close()
+        print(f"[OK] Database connected - {user_count} users in system")
+    except Exception as e:
+        print(f"[WARNING] Database connection issue: {e}")
+    
+    print("=" * 60 + "\n")
+
+
 @app.get("/")
 async def root():
     """Root endpoint - health check."""
@@ -55,15 +83,14 @@ from app.api import order as order_router
 from app.api import review as review_router
 from app.api import contact as contact_router
 from app.api import ai as ai_router
-from app.api import auth as auth_router
 
-app.include_router(auth_router.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(menu_router.router, prefix="/api/menu", tags=["Menu"])
 app.include_router(reservation_router.router, prefix="/api/reservations", tags=["Reservations"])
 app.include_router(order_router.router, prefix="/api/orders", tags=["Orders"])
 app.include_router(review_router.router, prefix="/api/reviews", tags=["Reviews"])
 app.include_router(contact_router.router, prefix="/api/contact", tags=["Contact"])
 app.include_router(ai_router.router, prefix="/api/ai", tags=["AI Features"])
+
 
 
 if __name__ == "__main__":

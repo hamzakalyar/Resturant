@@ -1,11 +1,15 @@
 import requests
 import json
+from datetime import datetime
+
+# Generate unique email for each test run
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 # Test registration with the API directly
 url = "http://localhost:8000/api/auth/register"
 data = {
-    "email": "debuguser@example.com",
-    "full_name": "Debug Test User",
+    "email": f"testuser_{timestamp}@example.com",
+    "full_name": "Test User",
     "password": "test123456",
     "phone": "1234567890"
 }
@@ -20,14 +24,14 @@ print("\n" + "=" * 50)
 
 try:
     response = requests.post(url, json=data, timeout=5)
-    print(f"\n✅ Status Code: {response.status_code}")
+    print(f"\n[STATUS] Status Code: {response.status_code}")
     
     if response.status_code == 201:
-        print("✅ SUCCESS! User registered successfully")
+        print("[SUCCESS] User registered successfully")
         print(f"\nResponse:")
         print(json.dumps(response.json(), indent=2))
     else:
-        print("❌ REGISTRATION FAILED")
+        print("[FAILED] REGISTRATION FAILED")
         print(f"\nError Response:")
         try:
             print(json.dumps(response.json(), indent=2))
@@ -35,16 +39,16 @@ try:
             print(response.text)
             
 except requests.exceptions.ConnectionError as e:
-    print(f"\n❌ CONNECTION ERROR")
+    print(f"\n[ERROR] CONNECTION ERROR")
     print(f"Cannot connect to {url}")
     print("The backend might not be running or not accessible on port 8000")
     
 except requests.exceptions.Timeout:
-    print("\n❌ TIMEOUT ERROR")
+    print("\n[ERROR] TIMEOUT ERROR")
     print("Request timed out - backend is not responding")
     
 except Exception as e:
-    print(f"\n❌ UNEXPECTED ERROR")
+    print(f"\n[ERROR] UNEXPECTED ERROR")
     print(f"Error Type: {type(e).__name__}")
     print(f"Error: {e}")
 
