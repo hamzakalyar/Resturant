@@ -4,12 +4,13 @@
  */
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaBars, FaTimes, FaUtensils } from 'react-icons/fa';
 import './Navbar.css';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -17,6 +18,10 @@ const Navbar = () => {
 
     const closeMenu = () => {
         setIsOpen(false);
+    };
+
+    const isActive = (path) => {
+        return location.pathname === path;
     };
 
     return (
@@ -32,27 +37,47 @@ const Navbar = () => {
                     {/* Desktop Menu */}
                     <ul className={`navbar__menu ${isOpen ? 'navbar__menu--open' : ''}`}>
                         <li className="navbar__item">
-                            <Link to="/" className="navbar__link" onClick={closeMenu}>
+                            <Link
+                                to="/"
+                                className={`navbar__link ${isActive('/') ? 'navbar__link--active' : ''}`}
+                                onClick={closeMenu}
+                            >
                                 Home
                             </Link>
                         </li>
                         <li className="navbar__item">
-                            <Link to="/menu" className="navbar__link" onClick={closeMenu}>
+                            <Link
+                                to="/menu"
+                                className={`navbar__link ${isActive('/menu') ? 'navbar__link--active' : ''}`}
+                                onClick={closeMenu}
+                            >
                                 Menu
                             </Link>
                         </li>
                         <li className="navbar__item">
-                            <Link to="/reservations" className="navbar__link" onClick={closeMenu}>
+                            <Link
+                                to="/reservations"
+                                className={`navbar__link ${isActive('/reservations') ? 'navbar__link--active' : ''}`}
+                                onClick={closeMenu}
+                            >
                                 Reservations
                             </Link>
                         </li>
                         <li className="navbar__item">
-                            <Link to="/about" className="navbar__link" onClick={closeMenu}>
+                            <Link
+                                to="/about"
+                                className={`navbar__link ${isActive('/about') ? 'navbar__link--active' : ''}`}
+                                onClick={closeMenu}
+                            >
                                 About
                             </Link>
                         </li>
                         <li className="navbar__item">
-                            <Link to="/contact" className="navbar__link" onClick={closeMenu}>
+                            <Link
+                                to="/contact"
+                                className={`navbar__link ${isActive('/contact') ? 'navbar__link--active' : ''}`}
+                                onClick={closeMenu}
+                            >
                                 Contact
                             </Link>
                         </li>
@@ -63,6 +88,7 @@ const Navbar = () => {
                         className="navbar__toggle"
                         onClick={toggleMenu}
                         aria-label="Toggle menu"
+                        aria-expanded={isOpen}
                     >
                         {isOpen ? <FaTimes /> : <FaBars />}
                     </button>

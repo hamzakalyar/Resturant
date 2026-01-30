@@ -3,7 +3,7 @@
  * Book a table at the restaurant
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaCalendar, FaClock, FaUser, FaUsers, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 import Button from '../components/common/Button';
 import Footer from '../components/common/Footer';
@@ -34,6 +34,11 @@ const Reservations = () => {
         '7:00 PM', '7:30 PM', '8:00 PM', '8:30 PM',
         '9:00 PM', '9:30 PM', '10:00 PM'
     ];
+
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     // Validate form fields
     const validateForm = () => {
@@ -391,7 +396,7 @@ const Reservations = () => {
                                     <FaMapMarkerAlt className="info-item__icon" />
                                     <div className="info-item__content">
                                         <h4>Location</h4>
-                                        <p>123 Culinary Street<br />Food District, FC 12345</p>
+                                        <p>Flat GF 1 Block C9 PHA Apartments<br />G11/3 Islamabad</p>
                                     </div>
                                 </div>
 
@@ -411,8 +416,8 @@ const Reservations = () => {
                                     <div className="info-item__content">
                                         <h4>Contact</h4>
                                         <p>
-                                            Phone: (555) 123-4567<br />
-                                            Email: reservations@restaurant.com
+                                            Phone: 0302-0000973<br />
+                                            Email: hamza@bytecraftsoft.com
                                         </p>
                                     </div>
                                 </div>

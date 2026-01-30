@@ -20,27 +20,32 @@
 .btn--primary {
     background: var(--gradient-primary);
     color: white;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 4px 12px rgba(212, 81, 30, 0.25);
+    border-radius: var(--radius-full);
 }
 
 .btn--primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(212, 81, 30, 0.35);
 }
 
 .btn--primary:active {
-    transform: translateY(0);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 81, 30, 0.25);
 }
 
 .btn--secondary {
     background-color: transparent;
     color: var(--color-primary);
     border: 2px solid var(--color-primary);
+    border-radius: var(--radius-full);
 }
 
 .btn--secondary:hover {
     background-color: var(--color-primary);
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 81, 30, 0.2);
 }
 
 .btn--outline {

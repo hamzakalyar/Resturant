@@ -91,15 +91,15 @@ const Footer = () => {
                         <ul className="footer__contact">
                             <li>
                                 <FaMapMarkerAlt className="contact__icon" />
-                                <span>123 Culinary Street, Food City, FC 12345</span>
+                                <span>Flat GF 1 Block C9 PHA Apartments, G11/3 Islamabad</span>
                             </li>
                             <li>
                                 <FaPhone className="contact__icon" />
-                                <a href="tel:+1234567890">+1 (234) 567-890</a>
+                                <a href="tel:+923020000973">0302-0000973</a>
                             </li>
                             <li>
                                 <FaEnvelope className="contact__icon" />
-                                <a href="mailto:info@restaurant.com">info@restaurant.com</a>
+                                <a href="mailto:hamza@bytecraftsoft.com">hamza@bytecraftsoft.com</a>
                             </li>
                         </ul>
                     </div>
@@ -114,6 +114,8 @@ const Footer = () => {
                         <Link to="/privacy">Privacy Policy</Link>
                         <span className="separator">|</span>
                         <Link to="/terms">Terms of Service</Link>
+                        <span className="separator">|</span>
+                        <span className="footer__credits">Developed by Muhammad Hamza Imtiaz</span>
                     </div>
                 </div>
             </div>
