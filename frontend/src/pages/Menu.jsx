@@ -4,18 +4,102 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { FaSearch, FaShoppingCart, FaTimes, FaFilter, FaLeaf, FaCarrot, FaBreadSlice, FaCheese } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart, FaTimes, FaFilter, FaLeaf, FaCarrot, FaBreadSlice } from 'react-icons/fa';
 import Button from '../components/common/Button';
 import Footer from '../components/common/Footer';
-import menuService from '../services/menuService';
 import './Menu.css';
+
+// Mock menu data (will be replaced with API when backend is deployed)
+const MOCK_MENU_ITEMS = [
+    {
+        id: 1,
+        name: 'Grilled Salmon',
+        description: 'Fresh Atlantic salmon grilled to perfection, served with asparagus and lemon butter sauce',
+        price: 24.99,
+        category: 'Main Course',
+        image_url: '/images/grilled-salmon.png',
+        dietary_tags: ['gluten-free'],
+        ingredients: 'Salmon, asparagus, lemon, butter, herbs'
+    },
+    {
+        id: 2,
+        name: 'Ribeye Steak',
+        description: 'Premium ribeye steak with roasted vegetables and creamy mashed potatoes',
+        price: 32.99,
+        category: 'Main Course',
+        image_url: '/images/beef-steak.png',
+        dietary_tags: ['gluten-free'],
+        ingredients: 'Beef ribeye, potatoes, carrots, asparagus, rosemary'
+    },
+    {
+        id: 3,
+        name: 'Pasta Carbonara',
+        description: 'Classic Italian pasta with bacon, parmesan, and creamy egg sauce',
+        price: 18.99,
+        category: 'Pasta',
+        image_url: '/images/pasta-carbonara.png',
+        dietary_tags: [],
+        ingredients: 'Spaghetti, bacon, eggs, parmesan cheese, black pepper'
+    },
+    {
+        id: 4,
+        name: 'Caesar Salad',
+        description: 'Crispy romaine lettuce with parmesan, croutons, and classic Caesar dressing',
+        price: 12.99,
+        category: 'Salads',
+        image_url: '/images/caesar-salad.png',
+        dietary_tags: ['vegetarian'],
+        ingredients: 'Romaine lettuce, parmesan, croutons, Caesar dressing, lemon'
+    },
+    {
+        id: 5,
+        name: 'Chicken Parmesan',
+        description: 'Breaded chicken breast with marinara sauce, melted mozzarella, served with spaghetti',
+        price: 21.99,
+        category: 'Main Course',
+        image_url: '/images/chicken-parmesan.png',
+        dietary_tags: [],
+        ingredients: 'Chicken breast, mozzarella, marinara sauce, spaghetti, basil'
+    },
+    {
+        id: 6,
+        name: 'Vegetable Stir Fry',
+        description: 'Colorful mix of fresh vegetables stir-fried in savory Asian sauce',
+        price: 15.99,
+        category: 'Main Course',
+        image_url: '/images/vegetable-stirfry.png',
+        dietary_tags: ['vegetarian', 'vegan'],
+        ingredients: 'Broccoli, bell peppers, carrots, snap peas, soy sauce, garlic'
+    },
+    {
+        id: 7,
+        name: 'Chocolate Lava Cake',
+        description: 'Decadent chocolate cake with molten center, served with vanilla ice cream',
+        price: 9.99,
+        category: 'Desserts',
+        image_url: '/images/chocolate-lava-cake.png',
+        dietary_tags: ['vegetarian'],
+        ingredients: 'Chocolate, eggs, butter, flour, vanilla ice cream, raspberries'
+    },
+    {
+        id: 8,
+        name: 'Margherita Pizza',
+        description: 'Authentic Italian pizza with fresh mozzarella, basil, and tomato sauce',
+        price: 16.99,
+        category: 'Pizza',
+        image_url: '/images/margherita-pizza.png',
+        dietary_tags: ['vegetarian'],
+        ingredients: 'Pizza dough, mozzarella, tomato sauce, fresh basil, olive oil'
+    }
+];
+
+const MOCK_CATEGORIES = ['All', 'Main Course', 'Pasta', 'Pizza', 'Salads', 'Desserts'];
 
 const Menu = () => {
     // State management
     const [menuItems, setMenuItems] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     // Filters
     const [selectedCategory, setSelectedCategory] = useState('All');
@@ -29,33 +113,23 @@ const Menu = () => {
     const [showModal, setShowModal] = useState(false);
     const [quantity, setQuantity] = useState(1);
 
-    // Fetch menu data on component mount
+    // Load menu data on component mount
     useEffect(() => {
-        fetchMenuData();
-    }, []);
+        // Scroll to top
+        window.scrollTo(0, 0);
 
-    const fetchMenuData = async () => {
-        try {
-            setLoading(true);
-            const [items, cats] = await Promise.all([
-                menuService.getMenuItems({ available_only: true }),
-                menuService.getCategories()
-            ]);
-            setMenuItems(items);
-            setCategories(['All', ...cats]);
+        // Simulate loading delay (like an API call)
+        setTimeout(() => {
+            setMenuItems(MOCK_MENU_ITEMS);
+            setCategories(MOCK_CATEGORIES);
 
             // Calculate max price for range slider
-            if (items.length > 0) {
-                const maxPrice = Math.max(...items.map(item => item.price));
-                setPriceRange([0, Math.ceil(maxPrice)]);
-            }
-        } catch (err) {
-            setError('Failed to load menu items');
-            console.error(err);
-        } finally {
+            const maxPrice = Math.max(...MOCK_MENU_ITEMS.map(item => item.price));
+            setPriceRange([0, Math.ceil(maxPrice)]);
+
             setLoading(false);
-        }
-    };
+        }, 500);
+    }, []);
 
     // Filter and sort menu items
     const getFilteredItems = () => {
@@ -138,15 +212,6 @@ const Menu = () => {
             <div className="menu-loading">
                 <div className="spinner"></div>
                 <p>Loading delicious dishes...</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="menu-error">
-                <p>{error}</p>
-                <Button onClick={fetchMenuData}>Try Again</Button>
             </div>
         );
     }
@@ -267,7 +332,7 @@ const Menu = () => {
                             >
                                 <div className="menu-card__image">
                                     <img
-                                        src={item.image_url || '/signature-dishes.png'}
+                                        src={item.image_url}
                                         alt={item.name}
                                         onError={(e) => {
                                             e.target.onerror = null;
@@ -326,7 +391,7 @@ const Menu = () => {
                         <div className="modal-body">
                             <div className="modal-image">
                                 <img
-                                    src={selectedItem.image_url || '/signature-dishes.png'}
+                                    src={selectedItem.image_url}
                                     alt={selectedItem.name}
                                     onError={(e) => {
                                         e.target.onerror = null;
